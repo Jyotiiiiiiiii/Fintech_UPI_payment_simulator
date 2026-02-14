@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment Simulation System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">💳</span>
+                    <h1>UPI Payment Simulator</h1>
+                </div>
+                <p class="subtitle">Simulated UPI Transaction System</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-btn" data-tab="register">Register User</button>
+            <button class="tab-btn" data-tab="payment">Send Payment</button>
+            <button class="tab-btn" data-tab="transactions">Transactions</button>
+            <button class="tab-btn" data-tab="users">All Users</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="dashboard-container">
+                    <h2>Dashboard</h2>
+                    
+                    <div class="search-section">
+                        <input type="text" id="searchUPI" class="search-input" placeholder="Enter UPI ID to search (e.g., alice@axis)">
+                        <button class="btn-primary" onclick="searchUser()">Search User</button>
+                    </div>
+
+                    <div id="dashboardResults" class="dashboard-grid">
+                        <div class="card welcome-card">
+                            <h3>Welcome to UPI Payment Simulator</h3>
+                            <p>Start by registering a user or searching for an existing user to view their profile and manage transactions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register User Tab -->
+            <div id="register" class="tab-content">
+                <div class="form-container">
+                    <h2>Register New User</h2>
+                    <form id="registerForm" class="form">
+                        <div class="form-group">
+                            <label for="regName">Full Name</label>
+                            <input type="text" id="regName" name="name" required placeholder="Enter full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regEmail">Email Address</label>
+                            <input type="email" id="regEmail" name="email" required placeholder="Enter email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regUPI">UPI ID</label>
+                            <input type="text" id="regUPI" name="upi_id" required placeholder="e.g., user@axis">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regPhone">Phone Number</label>
+                            <input type="tel" id="regPhone" name="phone" required placeholder="Enter 10-digit phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regBalance">Initial Balance (₹)</label>
+                            <input type="number" id="regBalance" name="initial_balance" value="1000" min="0" step="0.01">
+                        </div>
+
+                        <button type="submit" class="btn-primary">Register User</button>
+                    </form>
+
+                    <div id="registerMessage" class="message"></div>
+                </div>
+            </div>
+
+            <!-- Send Payment Tab -->
+            <div id="payment" class="tab-content">
+                <div class="form-container">
+                    <h2>Send Payment</h2>
+                    <form id="paymentForm" class="form">
+                        <div class="form-group">
+                            <label for="senderUPI">Sender UPI ID</label>
+                            <input type="text" id="senderUPI" name="sender_upi" required placeholder="e.g., alice@axis">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="receiverUPI">Receiver UPI ID</label>
+                            <input type="text" id="receiverUPI" name="receiver_upi" required placeholder="e.g., bob@axis">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount (₹)</label>
+                            <input type="number" id="amount" name="amount" required min="0.01" step="0.01" placeholder="Enter amount">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description (Optional)</label>
+                            <input type="text" id="description" name="description" placeholder="Enter transaction description">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pin">Security PIN</label>
+                            <input type="password" id="pin" name="pin" required placeholder="Default: 1234">
+                        </div>
+
+                        <button type="submit" class="btn-primary">Send Payment</button>
+                    </form>
+
+                    <div id="paymentMessage" class="message"></div>
+                </div>
+            </div>
+
+            <!-- Transactions Tab -->
+            <div id="transactions" class="tab-content">
+                <div class="transactions-container">
+                    <h2>Transaction History</h2>
+                    
+                    <div class="search-section">
+                        <input type="text" id="txnUPI" class="search-input" placeholder="Enter UPI ID to view transactions (optional)">
+                        <button class="btn-primary" onclick="loadTransactions()">Load Transactions</button>
+                        <button class="btn-secondary" onclick="loadAllTransactions()">Show All</button>
+                    </div>
+
+                    <div id="transactionsTable" class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Sender</th>
+                                    <th>Receiver</th>
+                                    <th>Amount (₹)</th>
+                                    <th>Status</th>
+                                    <th>Description</th>
+                                    <th>Date & Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txnTableBody">
+                                <tr><td colspan="7" class="text-center">No transactions loaded. Use search to load transactions.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Users Tab -->
+            <div id="users" class="tab-content">
+                <div class="users-container">
+                    <h2>All Registered Users</h2>
+                    <button class="btn-primary" onclick="loadAllUsers()">Load Users</button>
+
+                    <div id="usersGrid" class="users-grid">
+                        <!-- User cards will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Modal for User Details -->
+        <div id="userModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="userModalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
