@@ -103,7 +103,7 @@ git push -u origin main
 if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     Write-Host "╔════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-    Write-Host "║                    SUCCESS!                              ║" -ForegroundColor Green
+    Write-Host "║                    SUCCESS! 🎉                            ║" -ForegroundColor Green
     Write-Host "╚════════════════════════════════════════════════════════════╝" -ForegroundColor Green
     Write-Host ""
     Write-Host "Your code is now on GitHub!" -ForegroundColor Green
