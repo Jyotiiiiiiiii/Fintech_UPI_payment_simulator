@@ -1,30 +1,17 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from pymongo import MongoClient
 import os
+from dotenv import load_dotenv
 
-# Database URL
-DATABASE_URL = "sqlite:///./upi_system.db"
+load_dotenv()
 
-# Create engine
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
+# MongoDB Configuration
+MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "upi_system")
 
-# Session factory
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+# Create MongoDB client
+client = MongoClient(MONGODB_URL)
+db = client[DATABASE_NAME]
 
-# Base class for models
-Base = declarative_base()
-
-# Dependency to get database session
+# Dependency to get database
 def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    return db
