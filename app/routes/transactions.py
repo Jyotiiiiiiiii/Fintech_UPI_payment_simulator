@@ -4,6 +4,7 @@ from datetime import datetime
 from app.database.config import get_db
 from app.database.models import User, Transaction, TransactionStatus
 from app.models.schemas import PaymentRequest, PaymentResponse, TransactionResponse
+from app.utils.email_service import send_transaction_notification
 
 router = APIRouter(prefix="/api/payments", tags=["payments"])
 
@@ -76,6 +77,21 @@ def send_payment(payment: PaymentRequest, db: Session = Depends(get_db)):
         db.add(transaction)
         db.commit()
         db.refresh(transaction)
+        
+        # Send email notifications to both sender and receiver
+        try:
+            send_transaction_notification(
+                sender_email=sender.email,
+                sender_name=sender.name,
+                receiver_email=receiver.email,
+                receiver_name=receiver.name,
+                amount=payment.amount,
+                transaction_id=transaction.id,
+                description=payment.description,
+                timestamp=transaction.created_at
+            )
+        except Exception as email_error:
+            print(f"Email notification failed: {str(email_error)}")
         
         return PaymentResponse(
             success=True,
