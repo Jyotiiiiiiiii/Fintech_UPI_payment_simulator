@@ -56,13 +56,12 @@ Fin_UPI/
 
 ## 🚀 Quick Start
 pip install -r requirements.txt
-```
 
 ### 2. Run the Application
 
 ```bash
 python -m uvicorn app.main:app --reload
-```
+
 
 The API will be available at `http://localhost:8000`
 
